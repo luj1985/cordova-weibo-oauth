@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="com.ihavekey.weibo.oauth" 
+        version="0.0.0" 
+        xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+        xmlns:android="http://schemas.android.com/apk/res/android">
+  <name>Weibo Connect</name>
+  <description>
+    Cordova Plugin to connect Weibo via SSO
+  </description>
+
+  <preference name="APP_KEY" />
+  <preference name="APP_SECRET" />
+
+  <engines>
+    <engine name="cordova" version=">=3.5.0" />
+  </engines>
+
+  <js-module name="WeiboConnect" src="www/weibo-connect.js">
+    <clobbers target="weibo" />
+  </js-module>
+
+  <platform name="android">
+    <config-file parent="/*" target="res/xml/config.xml">
+      <feature name="WeiboConnect">
+        <param name="android-package" value="com.ihavekey.weibo.oauth.Weibo" />
+      </feature>
+    </config-file>
+    <config-file target="res/values/weiboconnect.xml" parent="/*">
+      <string name="app_key">$APP_KEY</string>
+      <string name="app_secret">$APP_SECRET</string>
+    </config-file>
+    <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+    
+    <source-file src="src/android/Weibo.java" target-dir="src/com/ihavekey/weibo/oauth" />
+    <source-file src="src/android/weibosdkcore_v3.0.1.jar" target-dir="libs" framework="true" />
+  </platform>
+</plugin>
