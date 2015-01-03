@@ -58,7 +58,7 @@ public class Weibo extends CordovaPlugin {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mSsoHandler.authorize(new AuthListener(callbackContext));
+                mSsoHandler.authorizeClientSso(new AuthListener(callbackContext));
             }
         });
     }
