@@ -10,6 +10,7 @@
 
   <preference name="APP_KEY" />
   <preference name="APP_SECRET" />
+  <preference name="APP_SCOPE" />
 
   <engines>
     <engine name="cordova" version=">=3.5.0" />
