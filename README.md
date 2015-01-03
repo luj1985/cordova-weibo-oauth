@@ -1,4 +1,4 @@
 cordova-weibo-oauth
 ===================
 
-Cordova Plugin to connect Weibo OAuth
+Cordova Plugin to connect Weibo via SSO handler

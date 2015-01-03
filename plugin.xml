@@ -31,7 +31,17 @@
       <string name="wb_app_secret">$APP_SECRET</string>
       <string name="wb_app_scope">$APP_SCOPE</string>
     </config-file>
-    <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+    <config-file parent="/*" target="AndroidManifest.xml">
+      <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+      <activity android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+                android:configChanges="keyboardHidden|orientation"
+                android:windowSoftInputMode="adjustResize">
+      </activity>
+    </config-file>
     
     <source-file src="src/android/Weibo.java" target-dir="src/com/ihavekey/weibo/oauth" />
     <source-file src="src/android/weibosdkcore_v3.0.1.jar" target-dir="libs" framework="true" />
