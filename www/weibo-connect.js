@@ -1,6 +1,6 @@
 var exec = require('cordova/exec');
 var weiboPlugin = {
-  login : function() {
+  login : function(success, error) {
     exec(success, error, "WeiboConnect", "login");
   }
 }
