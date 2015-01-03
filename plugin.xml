@@ -26,7 +26,7 @@
         <param name="android-package" value="com.ihavekey.weibo.oauth.Weibo" />
       </feature>
     </config-file>
-    <config-file target="res/values/weiboconnect.xml" parent="/*">
+    <config-file parent="/*" target="res/values/strings.xml">
       <string name="app_key">$APP_KEY</string>
       <string name="app_secret">$APP_SECRET</string>
       <string name="app_scope">$APP_SCOPE</string>
