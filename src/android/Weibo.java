@@ -18,7 +18,6 @@ import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 
-
 public class Weibo extends CordovaPlugin {
     
     private SsoHandler mSsoHandler = null;
@@ -101,12 +100,30 @@ public class Weibo extends CordovaPlugin {
 
         @Override
         public void onWeiboException(WeiboException e) {
-            Log.e("Cordova-Weibo", e.getMessage(), e);
+            String message = e.getMessage();
+            JSONObject res = new JSONObject();
+            try {
+                res.put("code", 1);
+                res.put("message", message);
+                context.error(res);
+            } catch (JSONException ex) {
+                throw new RuntimeException(ex);
+            }
+            Log.e("Cordova-Weibo", message, e);
         }
 
         @Override
         public void onCancel() {
-            context.error(0);
+            JSONObject res = new JSONObject();
+            String message = "authorize cancelled";
+            try {
+                res.put("code", 2);
+                res.put("message", message);
+                context.error(res);
+            } catch(JSONException e) {
+                throw new RuntimeException(e);
+            }
+            Log.i("Cordova-Weibo", message);
         }
     }
 }
