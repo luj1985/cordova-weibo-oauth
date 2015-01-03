@@ -47,6 +47,8 @@
     
     <source-file src="src/android/Weibo.java" target-dir="src/com/ihavekey/weibo/oauth" />
     <source-file src="src/android/weibosdkcore_v3.0.1.jar" target-dir="libs" framework="true" />
-    <source-file src="src/android/libs/armeabi/libweibosdkcore.so" target-dir="libs/armeabi" />
+    <lib-file src="src/android/libs/armeabi/libweibosdkcore.so" arch="device" />
+    <lib-file src="src/android/libs/mips/libweibosdkcore.so" arch="device" />
+    <lib-file src="src/android/libs/x86/libweibosdkcore.so" arch="device" />
   </platform>
 </plugin>
