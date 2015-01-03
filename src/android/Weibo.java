@@ -39,9 +39,9 @@ public class Weibo extends CordovaPlugin {
         String ns = activity.getPackageName();
         Resources resources = activity.getResources();
 
-        int resKey = resources.getIdentifier("APP_KEY", "string", ns);
-        int resSecret = resources.getIdentifier("APP_SECRET", "string", ns);
-        int resScope = resources.getIdentifier("APP_SCOPE", "string", ns);
+        int resKey = resources.getIdentifier("app_key", "string", ns);
+        int resSecret = resources.getIdentifier("app_secret", "string", ns);
+        int resScope = resources.getIdentifier("app_scope", "string", ns);
 
         String key = activity.getString(resKey);
         String secret = activity.getString(resSecret);

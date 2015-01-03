@@ -29,6 +29,7 @@
     <config-file target="res/values/weiboconnect.xml" parent="/*">
       <string name="app_key">$APP_KEY</string>
       <string name="app_secret">$APP_SECRET</string>
+      <string name="app_scope">$APP_SCOPE</string>
     </config-file>
     <config-file parent="/*" target="AndroidManifest.xml"></config-file>
     
