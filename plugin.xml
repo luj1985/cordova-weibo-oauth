@@ -17,7 +17,7 @@
   </engines>
 
   <js-module name="WeiboConnect" src="www/weibo-connect.js">
-    <clobbers target="weibo" />
+    <clobbers target="WeiboSso" />
   </js-module>
 
   <platform name="android">
