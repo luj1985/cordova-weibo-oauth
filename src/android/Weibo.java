@@ -50,7 +50,7 @@ public class Weibo extends CordovaPlugin {
         // scope is optional
         String scope = resScope == 0 ? "" : activity.getString(resScope);
 
-        AuthInfo authInfo = new AuthInfo(activity, key, resUrl, scope);
+        AuthInfo authInfo = new AuthInfo(activity, key, url, scope);
         return authInfo;
     }
 
