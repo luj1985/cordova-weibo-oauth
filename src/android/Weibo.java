@@ -19,24 +19,31 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 
 public class Weibo extends CordovaPlugin {
-    
-    private SsoHandler mSsoHandler = null;
+
     private static final int WEIBO_NOT_INSTALLED = 1;
-    private static final int AUTHORIZE_CANCELED = 2;
-    private static final int UNKNOWN_ERROR = 99;
+    private static final int WEIBO_AUTHORIZE_CANCELED = 2;
+    private static final int WEIBO_INVALID_TOKEN = 3;
+    private static final int WEIBO_UNKNOWN_ERROR = 99;
+    
+    private static final String TAG = "Cordova-Weibo-SSO";
+
+    private SsoHandler mSsoHandler = null;
 
     @Override
     public boolean execute(String action, JSONArray args,
-            CallbackContext callbackContext) throws JSONException {
-        if (action.equals("login")) {
-            AuthInfo authInfo = this.createAuthInfo();
-            this.login(authInfo, callbackContext);
+            CallbackContext context) throws JSONException {
+        this.buildSsoHandler();
+        if (action.equals("authorize")) {
+            this.login(context);
+            return true;
+        } else if (action.equals("isInstalled")) {
+            this.checkWeibo(context);
             return true;
         }
         return false;
     }
-    
-    private AuthInfo createAuthInfo() {
+
+    private void buildSsoHandler() {
         Activity activity = this.cordova.getActivity();
         String ns = activity.getPackageName();
         Resources resources = activity.getResources();
@@ -46,18 +53,26 @@ public class Weibo extends CordovaPlugin {
         int resScope = resources.getIdentifier("wb_scope", "string", ns);
 
         String key = activity.getString(resKey);
-        String url = activity.getString(resUrl);
-        // scope is optional
-        String scope = resScope == 0 ? "" : activity.getString(resScope);
+        // redirect_url and scope can be optional
+        String url = resUrl != 0 ? activity.getString(resUrl) : "https://api.weibo.com/oauth2/default.html";
+        String scope = resScope == 0 ? activity.getString(resScope) : "";
 
         AuthInfo authInfo = new AuthInfo(activity, key, url, scope);
-        return authInfo;
+
+        this.mSsoHandler = new SsoHandler(activity, authInfo);
     }
 
-    private void login(AuthInfo authInfo, final CallbackContext context) {
-        Activity activity = this.cordova.getActivity();
-        mSsoHandler = new SsoHandler(activity, authInfo);
-        if (mSsoHandler.isWeiboAppInstalled()) {
+    private void checkWeibo(final CallbackContext context) {
+        context.success(this.isWeiboInstalled() ? 1 : 0);
+    }
+
+    private boolean isWeiboInstalled() {
+        return mSsoHandler != null && mSsoHandler.isWeiboAppInstalled();
+    }
+
+    private void login(final CallbackContext context) {
+        if (this.isWeiboInstalled()) {
+            Activity activity = this.cordova.getActivity();
             this.cordova.setActivityResultCallback(this);
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -66,10 +81,9 @@ public class Weibo extends CordovaPlugin {
                 }
             });
         } else {
-            context.error(new ErrorMessage(WEIBO_NOT_INSTALLED, "Weibo not installed").toJSON());
+            context.error(new ErrorMessage(WEIBO_NOT_INSTALLED, "Weibo not installed"));
         }
     }
-    
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -79,23 +93,15 @@ public class Weibo extends CordovaPlugin {
             mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
     }
-    
-    class ErrorMessage {
-        private int code;
-        private String message;
+
+    class ErrorMessage extends JSONObject {
         public ErrorMessage(int code, String message) {
-            this.code = code;
-            this.message = message;
-        }
-        JSONObject toJSON() {
-            JSONObject json = new JSONObject();
             try {
-                json.put("code", this.code);
-                json.put("message", this.message);
-            } catch(JSONException e) {
+                this.put("code", code);
+                this.put("message", message);
+            } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
-            return json;
         }
     }
 
@@ -108,36 +114,36 @@ public class Weibo extends CordovaPlugin {
 
         @Override
         public void onComplete(Bundle values) {
-            Oauth2AccessToken accessToken = Oauth2AccessToken
-                    .parseAccessToken(values);
-            if (accessToken != null && accessToken.isSessionValid()) {
-                String uid = accessToken.getUid();
-                String token = accessToken.getToken();
-
+            Oauth2AccessToken accessToken = Oauth2AccessToken.parseAccessToken(values);
+            if (accessToken.isSessionValid()) {
                 JSONObject res = new JSONObject();
                 try {
-                    res.put("uid", uid);
-                    res.put("token", token);
+                    res.put("uid", accessToken.getUid());
+                    res.put("token", accessToken.getToken());
+                    res.put("expire_at", accessToken.getExpiresTime());
+                    res.put("refresh_token",accessToken.getRefreshToken());
                     context.success(res);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
+            } else {
+                String code = values.getString("code");
+                context.error(new ErrorMessage(WEIBO_INVALID_TOKEN, code));
             }
         }
 
         @Override
         public void onWeiboException(WeiboException e) {
             String message = e.getMessage();
-            ErrorMessage m = new ErrorMessage(UNKNOWN_ERROR, message);
-            context.error(m.toJSON());
-            Log.e("Cordova-Weibo", message, e);
+            context.error(new ErrorMessage(WEIBO_UNKNOWN_ERROR, message));
+            Log.e(TAG, message, e);
         }
 
         @Override
         public void onCancel() {
             String message = "authorize cancelled";
-            context.error(new ErrorMessage(AUTHORIZE_CANCELED, message).toJSON());
-            Log.i("Cordova-Weibo", message);
+            context.error(new ErrorMessage(WEIBO_AUTHORIZE_CANCELED, message));
+            Log.i(TAG, message);
         }
     }
 }
