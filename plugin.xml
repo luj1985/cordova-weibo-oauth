@@ -10,7 +10,7 @@
 
   <preference name="APP_KEY" />
   <preference name="APP_SECRET" />
-  <preference name="APP_SCOPE" />
+  <preference name="APP_SCOPE" value="email"/>
 
   <engines>
     <engine name="cordova" version=">=3.5.0" />
@@ -47,8 +47,8 @@
     
     <source-file src="src/android/Weibo.java" target-dir="src/com/ihavekey/weibo/oauth" />
     <source-file src="src/android/weibosdkcore_v3.0.1.jar" target-dir="libs" framework="true" />
-    <source-file src="src/android/libs/armeabi/libweibosdkcore.so" target-dir="libs/armeabi" framework="true" />
-    <source-file src="src/android/libs/mips/libweibosdkcore.so" target-dir="libs/mips" framework="true" />
-    <source-file src="src/android/libs/x86/libweibosdkcore.so" target-dir="libs/x86" framework="true" />
+    <source-file src="src/android/libs/armeabi/libweibosdkcore.so" target-dir="libs/armeabi" />
+    <source-file src="src/android/libs/mips/libweibosdkcore.so" target-dir="libs/mips" />
+    <source-file src="src/android/libs/x86/libweibosdkcore.so" target-dir="libs/x86" />
   </platform>
 </plugin>
