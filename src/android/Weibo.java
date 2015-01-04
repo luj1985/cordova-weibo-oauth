@@ -42,15 +42,15 @@ public class Weibo extends CordovaPlugin {
         Resources resources = activity.getResources();
 
         int resKey = resources.getIdentifier("wb_app_key", "string", ns);
-        int resSecret = resources.getIdentifier("wb_app_secret", "string", ns);
-        int resScope = resources.getIdentifier("wb_app_scope", "string", ns);
+        int resUrl = resources.getIdentifier("wb_redirect_url", "string", ns);
+        int resScope = resources.getIdentifier("wb_scope", "string", ns);
 
         String key = activity.getString(resKey);
-        String secret = activity.getString(resSecret);
+        String url = activity.getString(resUrl);
         // scope is optional
         String scope = resScope == 0 ? "" : activity.getString(resScope);
 
-        AuthInfo authInfo = new AuthInfo(activity, key, secret, scope);
+        AuthInfo authInfo = new AuthInfo(activity, key, resUrl, scope);
         return authInfo;
     }
 

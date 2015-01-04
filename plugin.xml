@@ -9,8 +9,8 @@
   </description>
 
   <preference name="APP_KEY" />
-  <preference name="APP_SECRET" />
-  <preference name="APP_SCOPE" value="email"/>
+  <preference name="REDIRECT_URL" />
+  <preference name="SCOPE" />
 
   <engines>
     <engine name="cordova" version=">=3.5.0" />
@@ -28,8 +28,8 @@
     </config-file>
     <config-file parent="/*" target="res/values/strings.xml">
       <string name="wb_app_key">$APP_KEY</string>
-      <string name="wb_app_secret">$APP_SECRET</string>
-      <string name="wb_app_scope">$APP_SCOPE</string>
+      <string name="wb_redirect_url">$REDIRECT_URL</string>
+      <string name="wb_scope">$SCOPE</string>
     </config-file>
     <config-file parent="/*" target="AndroidManifest.xml">
       <uses-permission android:name="android.permission.INTERNET" />
